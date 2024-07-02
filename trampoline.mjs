@@ -1,37 +1,43 @@
+async function tryConfigureChacha(chachaURL) {
+    console.log("Cirrus Runners's Chacha zone-local cache servers found, proceeding...");
+
+    const tokenRequestURL = process.env["ACTIONS_ID_TOKEN_REQUEST_URL"];
+    const tokenRequestToken = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
+
+    if (!tokenRequestURL || !tokenRequestToken) {
+        console.log("Cirrus Runners's Chacha zone-local cache servers are available, " +
+            "but seems like no \"id-token: write\" permission is configured, " +
+            "falling back to Cirrus Runners regional servers...");
+
+        return false;
+    }
+
+    try {
+        const resp = await fetch(tokenRequestURL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + tokenRequestToken,
+            }
+        });
+
+        const result = await resp.json();
+
+        process.env["ACTIONS_CACHE_URL"] = chachaURL;
+        process.env["ACTIONS_RUNTIME_TOKEN"] = result.value;
+
+        return true;
+    } catch (e) {
+        console.log("Failed to retrieve OIDC token, " +
+            "falling back to Cirrus Runners regional servers...");
+    }
+}
+
 async function tryOverrideCache() {
     // Try Cirrus Runners's Chacha zone-local cache servers first
     const chachaURL = process.env["CIRRUS_CHACHA_URL"];
 
-    if (chachaURL) {
-        console.log("Cirrus Runners's Chacha zone-local cache servers found, proceeding...");
-
-        const tokenRequestURL = process.env["ACTIONS_ID_TOKEN_REQUEST_URL"];
-        const tokenRequestToken = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
-
-        if (!tokenRequestURL || !tokenRequestToken) {
-            console.log("Cirrus Runners's Chacha zone-local cache servers are available, " +
-                "but seems like no \"id-token: write\" permission is configured, " +
-                "falling back to Cirrus Runners regional servers...");
-        }
-
-        try {
-            const resp = await fetch(tokenRequestURL, {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + tokenRequestToken,
-                }
-            });
-
-            const result = await resp.json();
-
-            process.env["ACTIONS_CACHE_URL"] = chachaURL;
-            process.env["ACTIONS_RUNTIME_TOKEN"] = result.value;
-
-            return;
-        } catch (e) {
-            console.log("Failed to retrieve OIDC token, " +
-                "falling back to Cirrus Runners regional servers...");
-        }
+    if (chachaURL && await tryConfigureChacha(chachaURL)) {
+        return;
     }
 
     // Fall back to Cirrus Runners regional-local cache servers
