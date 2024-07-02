@@ -49,10 +49,11 @@ jobs:
       - name: Apply Cirrus Labs modifications
         continue-on-error: false
         run: |
-          printf "%s\n%s" "$(git show cirruslabs:modification.js)" "$(cat dist/restore/index.js)" > dist/restore/index.js
-          printf "%s\n%s" "$(git show cirruslabs:modification.js)" "$(cat dist/restore-only/index.js)" > dist/restore-only/index.js
-          printf "%s\n%s" "$(git show cirruslabs:modification.js)" "$(cat dist/save/index.js)" > dist/save/index.js
-          printf "%s\n%s" "$(git show cirruslabs:modification.js)" "$(cat dist/save-only/index.js)" > dist/save-only/index.js
+          git show cirruslabs:trampoline.mjs > dist/restore/trampoline.mjs
+          git show cirruslabs:trampoline.mjs > dist/restore-only/trampoline.mjs
+          git show cirruslabs:trampoline.mjs > dist/save/trampoline.mjs
+          git show cirruslabs:trampoline.mjs > dist/save-only/trampoline.mjs
+          sed -i 's/index.js/trampoline.mjs/' action.yml restore/action.yml save/action.yml
 
       - name: Commit and push the changes
         continue-on-error: false

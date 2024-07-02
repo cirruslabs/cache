@@ -50,6 +50,6 @@ async function tryOverrideCache() {
     // Do not change anything, thus falling back to GitHub-provided cache servers
 }
 
-(async () => {
-    await tryOverrideCache()
-})();
+await tryOverrideCache();
+
+import("./index.js")
