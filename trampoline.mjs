@@ -40,9 +40,7 @@ async function tryOverrideCache() {
         return;
     }
 
-    // Fall back to Cirrus Runners regional-local cache servers
-    console.log("Falling back to Cirrus Runners regional-local cache servers...");
-
+    // Try Cirrus Runners regional-local cache servers
     const httpCacheHost = process.env["CIRRUS_HTTP_CACHE_HOST"];
 
     if (httpCacheHost) {
