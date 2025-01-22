@@ -23,6 +23,7 @@ async function tryConfigureChacha(chachaURL) {
         const result = await resp.json();
 
         process.env["ACTIONS_CACHE_URL"] = chachaURL;
+        process.env["ACTIONS_RESULTS_URL"] = chachaURL;
         process.env["ACTIONS_RUNTIME_TOKEN"] = result.value;
 
         return true;
@@ -46,9 +47,10 @@ async function tryOverrideCache() {
     if (httpCacheHost) {
         const newActionsCacheURL = "http://" + httpCacheHost + "/";
 
-        console.log("Redefining the ACTIONS_CACHE_URL to " + newActionsCacheURL + " to make the cache faster...");
+        console.log("Redefining the ACTIONS_CACHE_URL and ACTIONS_RESULTS_URL to " + newActionsCacheURL + " to make the cache faster...");
 
         process.env["ACTIONS_CACHE_URL"] = newActionsCacheURL;
+        process.env["ACTIONS_RESULTS_URL"] = newActionsCacheURL;
     }
 
     // Do not change anything, thus falling back to GitHub-provided cache servers
