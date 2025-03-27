@@ -12,13 +12,14 @@ permissions:
 
 jobs:
   update:
-    name: Update the repository (${{ matrix.reference }})
+    name: Update the repository (${{ matrix.reference }}${{ matrix.suffix }})
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         reference: [v3, v4]
+        suffix: ["", "-thunder"]
 
     steps:
       - name: Checkout the repository
@@ -36,10 +37,10 @@ jobs:
           git remote add upstream https://github.com/actions/cache.git
           git fetch upstream --tags --force
 
-      - name: Checkout to a new branch that is pointing to ${{ matrix.reference }}
+      - name: Checkout to a new branch ${{ matrix.reference }}${{ matrix.suffix }} that is pointing to ${{ matrix.reference }}
         continue-on-error: false
         run: |
-          git checkout -B ${{ matrix.reference }} ${{ matrix.reference }}
+          git checkout -B ${{ matrix.reference }}${{ matrix.suffix }} ${{ matrix.reference }}
 
       - name: Remove the workflow directory
         continue-on-error: false
@@ -49,10 +50,10 @@ jobs:
       - name: Apply Cirrus Labs modifications
         continue-on-error: false
         run: |
-          git show cirruslabs:trampoline.mjs > dist/restore/trampoline.mjs
-          git show cirruslabs:trampoline.mjs > dist/restore-only/trampoline.mjs
-          git show cirruslabs:trampoline.mjs > dist/save/trampoline.mjs
-          git show cirruslabs:trampoline.mjs > dist/save-only/trampoline.mjs
+          git show cirruslabs:trampoline${{ matrix.suffix }}.mjs > dist/restore/trampoline.mjs
+          git show cirruslabs:trampoline${{ matrix.suffix }}.mjs > dist/restore-only/trampoline.mjs
+          git show cirruslabs:trampoline${{ matrix.suffix }}.mjs > dist/save/trampoline.mjs
+          git show cirruslabs:trampoline${{ matrix.suffix }}.mjs > dist/save-only/trampoline.mjs
           sed -i 's/index.js/trampoline.mjs/' action.yml restore/action.yml save/action.yml
 
       - name: Commit and push the changes
@@ -60,5 +61,5 @@ jobs:
         run: |
           git add . && git commit -m "Cirrus Labs modifications"
 
-      - name: Force-push to the "${{ matrix.reference }}" branch
-        run: git push -f origin refs/heads/${{ matrix.reference }}
+      - name: Force-push to the "${{ matrix.reference }}${{ matrix.suffix }}" branch
+        run: git push -f origin refs/heads/${{ matrix.reference }}${{ matrix.suffix }}
