@@ -49,7 +49,7 @@ steps:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: us-east-1
   - name: Cache node modules
-    uses: cirruslabs/cache@v4
+    uses: cirruslabs/cache@v5
     with:
       path: node_modules
       key: node_modules
