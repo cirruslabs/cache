@@ -18,8 +18,8 @@ jobs:
 
     strategy:
       matrix:
-        reference: [v3, v4]
-        suffix: ["", "-thunder"]
+        reference: [v3, v4, v5]
+        suffix: [""]
 
     steps:
       - name: Checkout the repository
