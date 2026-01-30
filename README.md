@@ -26,8 +26,8 @@ This allows jobs on [Cirrus Runners](https://cirrus-runners.app/) or self-hosted
 Cirrus Runners run an omni-cache sidecar instance by default, making the changes in your CI workflows as simple as:
 
 ```diff
--- uses: actions/cache@v4
-+- uses: cirruslabs/cache@v4
+-- uses: actions/cache@v5
++- uses: cirruslabs/cache@v5
    with:
      path: node_modules
      key: node_modules
