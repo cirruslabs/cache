@@ -39,8 +39,8 @@ outputs:
     description: 'A boolean value to indicate an exact match was found for the primary key'
 runs:
   using: 'node20'
-  main: 'dist/restore/index.js'
-  post: 'dist/save/index.js'
+  main: 'dist/restore/trampoline.mjs'
+  post: 'dist/save/trampoline.mjs'
   post-if: "success()"
 branding:
   icon: 'archive'
