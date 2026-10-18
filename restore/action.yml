@@ -32,7 +32,7 @@ outputs:
     description: 'Key of the cache that was restored, it could either be the primary key on cache-hit or a partial/complete match of one of the restore keys'
 runs:
   using: 'node16'
-  main: '../dist/restore-only/index.js'
+  main: '../dist/restore-only/trampoline.mjs'
 branding:
   icon: 'archive'
   color: 'gray-dark'
