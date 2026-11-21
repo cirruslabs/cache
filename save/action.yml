@@ -17,7 +17,7 @@ inputs:
     required: false
 runs:
   using: 'node16'
-  main: '../dist/save-only/index.js'
+  main: '../dist/save-only/trampoline.mjs'
 branding:
   icon: 'archive'
   color: 'gray-dark'
